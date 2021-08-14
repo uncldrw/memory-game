@@ -1,5 +1,3 @@
-//test
-
 let mainLevel = 1;
 let subLevel = 1;
 let currentQuestion = '';
