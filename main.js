@@ -1,11 +1,14 @@
 let mainLevel = 1;
 let subLevel = 1;
 let currentQuestion = '';
-let wrong = 0;
+let fehler = 0;
 
 // Zum Start werden die Counter Aktualisiert und die erste reihe an zufallszahlen generiert
-SetCounter(); // Aktualisiert die Counter
-ShowToGuess(); // Generiert die erste zufallszahl
+setTimeout(() => {
+  document.getElementById('_loader').style.display = 'none';
+  SetCounter(); // Aktualisiert die Counter
+  ShowToGuess(); // Generiert die erste zufallszahl
+}, 1000);
 
 // Event Listener welcher eine Funktion zum überprüfen der Usereingabe ausführt
 
@@ -22,18 +25,24 @@ document.getElementById('form').addEventListener('submit', (event) => {
     } else if (subLevel == 3) {
       ++mainLevel; // Wenn das Sub Level gleich 3 entspricht, steigt man ein Main Level auf und das Sub Level wird zurück gesetzt
       subLevel = 1;
+      if (mainLevel == 7) {
+        // Wenn das 7te Hauptlevel erreicht wird, gewinnt man
+        document.getElementById('winner_pre_wrapper').style.display = 'flex';
+        document.getElementById('form').style.display = 'none';
+        return;
+      }
     }
     SetCounter(); // Damit die neuen Daten angezeigt werden werden mit der SetCounter Funktion, der Text der HTML Elemente mit den neuen daten ersetzt
     document.getElementById('_input').value = ''; // Input wird durch einen leeren String ersetzt damit eine Neue Usereingabe erfolgen kann
     ShowToGuess(true); // Zeigt die zu erratende Zahl direkt nach dem Submit Event (ENTER drücken) aufgrund des "true" Parameter
   } else {
-    wrong++; // Bei falscher eingabe geht die Anzahl der falschen eingaben hoch
+    fehler++; // Bei falscher eingabe geht die Anzahl der falschen eingaben hoch
     document.getElementById('_input').value = ''; // Setzt den input auf einen leeren string
     SetCounter(); // Aktualisiert die Anzeige
-    if (wrong === 3) {
+    if (fehler === 3) {
       // Bei 3 Falschen eingaben ist das Spiel vorbei
       document.getElementById('form').style.display = 'none'; // Blendet die eingabe aus
-      document.getElementById('lostTitle').style.display = 'block'; // Blendet die "Verlieren Nachricht" ein
+      document.getElementById('verliererTitle').style.display = 'block'; // Blendet die "Verlieren Nachricht" ein
       document.getElementById('guess').innerHTML = 'XXXXXX'; // Ersetzt die Anzeige mit der zu erratenen Zahl mit "XXXXXX"
       return; // Das return sorgt dafür dass der Codeblock unterhalb des IF Statements nicht ausgeführt wird
     }
@@ -77,14 +86,19 @@ function ShowToGuess(short) {
   );
 }
 
+document.getElementById('gewonnenButton').addEventListener('click', () => {
+  console.log('test');
+  document.getElementById('winner_pre_wrapper').style.display = 'none';
+});
+
 // Funktion zum aktualisieren der Lebens & Level Anzeige
 function SetCounter() {
   document.getElementById('levelCounter').innerHTML = `${
     mainLevel + ' | ' + subLevel
   }`; // Aktualisiert die Levelanzeige
 
-  document.getElementById('wrongCounter').innerHTML = `Wrong: ${
-    wrong + '/' + 3
+  document.getElementById('fehlerCounter').innerHTML = `fehler: ${
+    fehler + '/' + 3
   }`; // Aktualisiert die Anzeige für die Falschen eingaben
 }
 
@@ -94,13 +108,43 @@ function Restart() {
   mainLevel = 1;
   subLevel = 1;
   currentQuestion = '';
-  wrong = 0;
+  fehler = 0;
   lives = 3;
 
+  document.getElementById('_input').value = '';
+  document.getElementById('winner_pre_wrapper').style.display = 'none';
   document.getElementById('form').style.display = 'block'; // Blendet das Inputfeld wieder an
-  document.getElementById('lostTitle').style.display = 'none'; // Blendet die Verlieren Nachricht ein
+  document.getElementById('verliererTitle').style.display = 'none'; // Blendet die Verlieren Nachricht ein
 
   // Löst eine neues Spiel aus
   SetCounter();
   ShowToGuess(true);
 }
+
+// Dark Mode Switcher
+
+const toggleSwitch = document.querySelector(
+  '.theme-switch input[type="checkbox"]'
+);
+
+function switchTheme(e) {
+  if (e.target.checked) {
+    document.documentElement.setAttribute('data-theme', 'dark');
+  } else {
+    document.documentElement.setAttribute('data-theme', 'light');
+  }
+}
+
+toggleSwitch.addEventListener('change', switchTheme, false);
+
+function switchTheme(e) {
+  if (e.target.checked) {
+    document.documentElement.setAttribute('data-theme', 'dark');
+    localStorage.setItem('theme', 'dark');
+  } else {
+    document.documentElement.setAttribute('data-theme', 'light');
+    localStorage.setItem('theme', 'light');
+  }
+}
+
+// Dark Mode Switcher zuende
