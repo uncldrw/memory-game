@@ -1,49 +1,92 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="de">
 
 <head>
    <meta charset="UTF-8">
-   <meta http-equiv="X-UA-Compatible" content="IE=edge">
+
    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-   <link rel="stylesheet" href="styles.css">
+   <link rel="stylesheet" href="layout.css">
    <script src="main.js" defer></script>
-   <title>Document</title>
+   <title>RETYPE</title>
 </head>
 
 <body>
-   <link rel="stylesheet" type="text/css" href="css/normalize.css">
-   <link href="https://fonts.googleapis.com/css?family=Fira+Mono:400,700" rel="stylesheet">
+   <div class="loader" id="_loader">
+      <div class="lds-dual-ring"></div>
+   </div>
+   <div id="winner_pre_wrapper" style="display: none">
+      <pre class="winner_pre">
+                                    ,
+                               ,   ,'|
+                             ,/|.-'   \.
+                          .-'  '       |.
+                    ,  .-'              |
+                   /|,'                 |'
+                  / '                    |  ,
+                 /                       ,'/
+              .  |          _              /
+               \`' .-.    ,' `.           |
+                \ /   \ /      \          /
+                 \|    V        |        |  ,
+                  (           ) /.--.   ''"/
+                  "b.`. ,' _.ee'' 6)|   ,-'
+                    \"= --""  )   ' /.-'
+                     \ / `---"   ."|'
+  G E W O N N E N !   \"..-    .'  |.
+                       `-__..-','   |
+                     __.) ' .-'/    /\._
+               _.--'/----..--------. _.-""-._
+            .-'_)   \.   /     __..-'     _.-'--.
+           / -'/      """""""""         ,'-.   . `.
+          | ' /                        /    `   `. \
+          |   |                        |         | |
+           \ .'\                       |     \     |
+          / '  | ,'               . -  \`.    |  / /
+         / /   | |                      `/"--. -' /\
+        | |     \ \                     /     \     |
+ _Seal_ | \      | \                  .-|      |    |
+      </pre>
+      <button id="gewonnenButton">Weiter</button>
+   </div>
+   <div class="switcher-wrapper">
+      <em>Dark Mode!</em>
+      <label class="theme-switch" for="checkbox">
+         <input type="checkbox" id="checkbox" />
+         <div class="slider round"></div>
+      </label>
+   </div>
    <div class="content">
-      <pre>
-  ██╗        ██╗    ██╗  
- ██╔╝       ██╔╝    ╚██╗ 
-██╔╝       ██╔╝      ╚██╗
-╚██╗      ██╔╝       ██╔╝
- ╚██╗    ██╔╝       ██╔╝ 
-  ╚═╝    ╚═╝        ╚═╝  
-                             
-Greetings developers, Shall we play a game?
-   
-Re-type the number you see below. Ez right?
+      <pre id="_pre">Willkommen Bei RETYPE!
+      --------------------------------------------      
+______ _____ _______   _______ _____ 
+| ___ \  ___|_   _\ \ / / ___ \  ___|
+| |_/ / |__   | |  \ V /| |_/ / |__  
+|    /|  __|  | |   \ / |  __/|  __| 
+| |\ \| |___  | |   | | | |   | |___ 
+\_| \_\____/  \_/   \_/ \_|   \____/
+
+--------------------------------------------
+Merk dir die unten gennante zahl
+und schreib sie wieder rein, ganz easy oder?
    
    
    </pre>
-      <div id="app">
-         <div class="topbar-ctn">
+      <div id="spiel">
+         <div class="top">
             <p id="levelCounter"></p>
-            <p id="wrongCounter">Wrong: x | x</p>
+            <p id="fehlerCounter">fehler: x | x</p>
          </div>
          <div class="gamearea">
-            <p>---=================================---</p>
+            <p>---#################################---</p>
             <h1 class="number" id="guess">··</h1>
-            <p>---=================================---</p>
+            <p>---#################################---</p>
          </div>
-         <div class="app__input">
+         <div class="spiel__input">
             <form id="form">
-               <label for="_input">Number is:<input type="number" id="_input"></label>
+               <label for="_input">Zahl :<input type="number" id="_input"></label>
                <input type="submit" hidden>
             </form>
-            <p id="lostTitle" style="display:none">Du hast verloren!</p>
+            <p id="verliererTitle" style="display:none">Du hast verloren!</p>
             <button onclick="Restart()">RESTART</button>
          </div>
       </div>
