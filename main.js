@@ -1,7 +1,8 @@
 let mainLevel = 1;
 let subLevel = 1;
-let currentQuestion = '';
+let currentQuestion = 0;
 let fehler = 0;
+let time = null;
 
 // Zum Start werden die Counter Aktualisiert und die erste reihe an zufallszahlen generiert
 setTimeout(() => {
@@ -19,6 +20,10 @@ document.getElementById('form').addEventListener('submit', (event) => {
   event.preventDefault(); // prevent.Default sorgt dafür dass das formular beim submit nicht die Seite neu lädt
 
   if (currentQuestion == userInput) {
+    if (timer) {
+      clearTimeout(timer);
+      timer = null;
+    }
     // Prüft ob die eingabe des Users der zu erratenen Zahl entspricht
     if (subLevel < 3) {
       ++subLevel; // wenn das Sub Level unter 3 ist, steigt man ein Sub Level auf
@@ -55,23 +60,28 @@ document.getElementById('form').addEventListener('submit', (event) => {
 // Generiert eine zufahlszahl in relation zum Level und blendet diese auf der DOM an
 function generator() {
   let numberToGuess = ''; // Erstellt eine Variable mit der zu erratenen Zahl
+  currentQuestion = 0;
   for (let index = 0; index < mainLevel + 1; index++) {
     // erstellt eine Zufallszahl mit der Anzahl an ziffern der summe des Main Levels + 1
-    let random = Math.round(Math.random() * (9 - 0)).toString(); // Generiert eine Ziffer zwischen 0 und 9 und wandelt diese in einen String um
-    numberToGuess = numberToGuess + random; // Hängt die Zufallsziffer und hängt diese hinter den String
-    currentQuestion = numberToGuess; // Macht die zu erratene zu einer Globalen variable
+    let random = Math.round(Math.random() * (9 - 0)); // Generiert eine Ziffer zwischen 0 und 9 und wandelt diese in einen String um
+    if (numberToGuess == '') {
+      numberToGuess = numberToGuess + random; // Hängt die Zufallsziffer und hängt diese hinter den String
+    } else {
+      numberToGuess = numberToGuess + '+' + random;
+    }
+    currentQuestion = currentQuestion + random; // Macht die zu erratene zu einer Globalen variable
   }
   document.getElementById('guess').innerHTML = numberToGuess; // Zeigt die zu erratende Zahl in der DOM an
 }
 
 // Zeigt die zu erratende Zahl an in relation zum Level (Höheres Level = Mehr Zeit)
 function ShowToGuess(short) {
-  time =
+  timeIn =
     100 * Math.min(mainLevel + 2, 5) + 400 * Math.max(mainLevel + 2 - 5, 0); // Berechnet auf Basis des Levels die Zeit in der die zu erratende Zahl Sichtbar ist
   setTimeout(
     () => {
       generator(); // führt entweder nach 0ms oder nach "time" ms die Generator Funktion aus
-      setTimeout(() => {
+      timer = setTimeout(() => {
         let string = '';
         for (let index = 0; index < mainLevel + 1; index++) {
           // Die for schleife erstellt einen String aus '·' welche mit der Ziffernanzahl der zu erratenen Zahl übereinstimmt
@@ -79,9 +89,9 @@ function ShowToGuess(short) {
         }
         document.getElementById('guess').innerHTML = string; // Tauscht den generierten string mit dem Feld der zu erratenen Zahl aus
         //console.log(currentQuestion); ( Die Zeile auskommentieren damit die zu erratene Zahl in der Konsole angezeigt wird )
-      }, time);
+      }, 5000);
     },
-    short ? 0 : time // Bestimmt die Zeit nach wie vielen sekunden der codeblock ausgeführt wirt
+    short ? 0 : timeIn // Bestimmt die Zeit nach wie vielen sekunden der codeblock ausgeführt wirt
     // Der Ternary Operator bestimmt die Sekunden (bei true => 0ms, bei false => time variable)
   );
 }
@@ -104,10 +114,14 @@ function SetCounter() {
 
 // Restart Funktion setzt alle Variablen auf ihre Standartwerte und startet ein neues Spiel
 function Restart() {
+  if (timer) {
+    clearTimeout(timer);
+    timer = null;
+  }
   // Standartwerte werden gesetzt
   mainLevel = 1;
   subLevel = 1;
-  currentQuestion = '';
+  currentQuestion = 0;
   fehler = 0;
   lives = 3;
 
